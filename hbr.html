@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Happy Birthday Rim</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+      background: #000;
+      touch-action: none;
+    }
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<audio id="bgm" src="https://www.soundhelix.com/hbr/mp3/SoundHelix-Song-1.mp3" preload="auto" loop></audio>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const audio = document.getElementById("bgm");
+
+  let width = window.innerWidth;
+  let height = window.innerHeight;
+  canvas.width = width;
+  canvas.height = height;
+
+  let particles = [];
+  let snowflakes = [];
+  let textIndex = 0;
+  const texts = ["HAPPY BIRTHDAY", "RIM"];
+  let forming = false;
+  let exploded = false;
+  let musicStarted = false;
+
+  class Particle {
+    constructor(x, y, color) {
+      this.x = Math.random() * width;
+      this.y = Math.random() * height;
+      this.origX = x;
+      this.origY = y;
+      this.color = color;
+      this.size = 2 + Math.random() * 2;
+      this.vx = 0;
+      this.vy = 0;
+    }
+
+    update(forming) {
+      if (forming) {
+        let dx = this.origX - this.x;
+        let dy = this.origY - this.y;
+        this.vx += dx * 0.01;
+        this.vy += dy * 0.01;
+        this.vx *= 0.9;
+        this.vy *= 0.9;
+      } else {
+        this.vx += (Math.random() - 0.5) * 2;
+        this.vy += (Math.random() - 0.5) * 2;
+        this.vx *= 0.95;
+        this.vy *= 0.95;
+      }
+      this.x += this.vx;
+      this.y += this.vy;
+    }
+
+    draw() {
+      ctx.fillStyle = this.color;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  class Snowflake {
+    constructor() {
+      this.reset();
+    }
+
+    reset() {
+      this.x = Math.random() * width;
+      this.y = Math.random() * -height;
+      this.size = 1 + Math.random() * 2;
+      this.speedY = 0.5 + Math.random() * 1;
+      this.alpha = 0.05 + Math.random() * 0.1;
+    }
+
+    update() {
+      this.y += this.speedY;
+      if (this.y > height) this.reset();
+    }
+
+    draw() {
+      ctx.fillStyle = `rgba(255,255,255,${this.alpha})`;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function createTextParticles(text) {
+    ctx.clearRect(0, 0, width, height);
+    ctx.fillStyle = "#fff";
+    ctx.font = `${Math.floor(width / (text.length > 8 ? 10 : 5))}px Arial Black`;
+    ctx.textAlign = "center";
+    ctx.fillText(text, width / 2, height / 2);
+
+    const imageData = ctx.getImageData(0, 0, width, height);
+    particles = [];
+    for (let y = 0; y < height; y += 6) {
+      for (let x = 0; x < width; x += 6) {
+        const index = (y * width + x) * 4;
+        if (imageData.data[index + 3] > 150) {
+          const color = `hsl(${Math.random() * 360}, 100%, 70%)`;
+          particles.push(new Particle(x, y, color));
+        }
+      }
+    }
+
+    if (snowflakes.length === 0) {
+      for (let i = 0; i < 150; i++) {
+        snowflakes.push(new Snowflake());
+      }
+    }
+
+    forming = true;
+    exploded = false;
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, width, height);
+
+    for (let flake of snowflakes) {
+      flake.update();
+      flake.draw();
+    }
+
+    for (let p of particles) {
+      p.update(forming);
+      p.draw();
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  canvas.addEventListener("click", () => {
+    if (!musicStarted) {
+      audio.volume = 0.8;
+      audio.play().then(() => {
+        musicStarted = true;
+        console.log("Audio started.");
+      }).catch(err => {
+        console.warn("Audio blocked by browser:", err.message);
+      });
+    }
+
+    if (exploded) {
+      textIndex = (textIndex + 1) % texts.length;
+      createTextParticles(texts[textIndex]);
+    }
+  });
+
+  canvas.addEventListener("mousedown", () => {
+    if (forming) {
+      forming = false;
+      exploded = true;
+    }
+  });
+
+  let touchStartX = 0;
+  canvas.addEventListener("touchstart", (e) => {
+    touchStartX = e.touches[0].clientX;
+    if (!musicStarted) {
+      audio.volume = 0.8;
+      audio.play().then(() => {
+        musicStarted = true;
+      }).catch(err => {
+        console.warn("Touch play failed:", err.message);
+      });
+    }
+  });
+
+  canvas.addEventListener("touchend", (e) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    if (Math.abs(touchEndX - touchStartX) > 50 && forming) {
+      forming = false;
+      exploded = true;
+    }
+  });
+
+  window.addEventListener("resize", () => {
+    width = window.innerWidth;
+    height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+    if (!exploded) createTextParticles(texts[textIndex]);
+  });
+
+  createTextParticles(texts[0]);
+  animate();
+</script>
+</body>
+</html>
