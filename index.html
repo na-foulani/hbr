@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday RIM! ??</title>
+    <title>Happy Birthday RIM! 🎉</title>
     <style>
         * {
             margin: 0;
@@ -386,7 +386,7 @@
 </head>
 <body>
     <div class="game-container">
-        <h1 class="title">?? Birthday Memory Game ??</h1>
+        <h1 class="title">🎂 Birthday Memory Game 🎂</h1>
         <p class="instructions">Click the cards in the right order to reveal the special message!</p>
         
         <div class="message-display" id="messageDisplay"></div>
@@ -400,14 +400,14 @@
         </div>
         
         <div class="final-message" id="finalMessage">
-            ?? HAPPY BIRTHDAY RIM! ??
+            🎉 HAPPY BIRTHDAY RIM! 🎉
         </div>
 
         <div class="celebration-controls" id="celebrationControls">
             <div class="controls">
                 <!-- Play Song Dropdown -->
                 <div class="dropdown">
-                    <button class="btn" onclick="toggleDropdown('songDropdown')">?? Play Song</button>
+                    <button class="btn" onclick="toggleDropdown('songDropdown')">🎵 Play Song</button>
                     <div id="songDropdown" class="dropdown-content">
                         <div class="dropdown-item" onclick="playSong('song1.mp3')">Happy Birthday Song 1</div>
                         <div class="dropdown-item" onclick="playSong('song2.mp3')">Happy Birthday Song 2</div>
@@ -418,7 +418,7 @@
 
                 <!-- Play Video Dropdown -->
                 <div class="dropdown">
-                    <button class="btn" onclick="toggleDropdown('videoDropdown')">?? Play Video</button>
+                    <button class="btn" onclick="toggleDropdown('videoDropdown')">🎬 Play Video</button>
                     <div id="videoDropdown" class="dropdown-content">
                         <div class="dropdown-item" onclick="playVideo('video1.mp4')">Congratulations Video 1</div>
                         <div class="dropdown-item" onclick="playVideo('video2.mp4')">Congratulations Video 2</div>
@@ -428,7 +428,7 @@
                 </div>
 
                 <!-- Celebrate Button -->
-                <button class="btn" onclick="startImageBurst()">? Celebrate!</button>
+                <button class="btn" onclick="startImageBurst()">✨ Celebrate!</button>
             </div>
         </div>
     </div>
@@ -474,7 +474,7 @@
 '8.png',
             '9.png', 
             '10.png',
-            '4.jpg',
+            //'4.jpg',
             
 
             // Add more image filenames as needed 
@@ -513,13 +513,13 @@
                 card.innerHTML = `
                     <div class="card-inner">
                         <div class="card-front">?</div>
-                        <div class="card-back">${i < shuffledLetters.length ? shuffledLetters[i] : '?'}</div>
+                        <div class="card-back">${i < shuffledLetters.length ? shuffledLetters[i] : '★'}</div>
                     </div>
                 `;
                 
                 const cardData = {
                     element: card,
-                    letter: i < shuffledLetters.length ? shuffledLetters[i] : '?',
+                    letter: i < shuffledLetters.length ? shuffledLetters[i] : '★',
                     isRevealed: false
                 };
                 
@@ -654,7 +654,7 @@
             for (let i = 0; i < 20; i++) {
                 setTimeout(() => {
                     const sparkle = document.createElement('div');
-                    sparkle.innerHTML = '?';
+                    sparkle.innerHTML = '✨';
                     sparkle.style.position = 'fixed';
                     sparkle.style.left = Math.random() * window.innerWidth + 'px';
                     sparkle.style.top = Math.random() * window.innerHeight + 'px';
