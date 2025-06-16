@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happy Birthday RIM! ??</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #000;
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Starry background animation */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(2px 2px at 20px 30px, silver, transparent),
+                radial-gradient(2px 2px at 40px 70px, silver, transparent),
+                radial-gradient(1px 1px at 90px 40px, silver, transparent),
+                radial-gradient(1px 1px at 130px 80px, silver, transparent),
+                radial-gradient(2px 2px at 160px 30px, silver, transparent),
+                radial-gradient(1px 1px at 200px 90px, silver, transparent),
+                radial-gradient(2px 2px at 240px 20px, silver, transparent),
+                radial-gradient(1px 1px at 280px 60px, silver, transparent),
+                radial-gradient(1px 1px at 320px 90px, silver, transparent),
+                radial-gradient(2px 2px at 20px 120px, silver, transparent),
+                radial-gradient(1px 1px at 60px 150px, silver, transparent);
+            background-repeat: repeat;
+            background-size: 350px 200px;
+            animation: sparkle 3s ease-in-out infinite alternate;
+            z-index: -1;
+        }
+
+        @keyframes sparkle {
+            0% { opacity: 0.3; }
+            100% { opacity: 0.8; }
+        }
+
+        .game-container {
+            text-align: center;
+            padding: 20px;
+            max-width: 600px;
+            width: 100%;
+        }
+
+        .title {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #ff69b4, #ffc0cb, #ff1493);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: titleGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes titleGlow {
+            0% { filter: drop-shadow(0 0 5px #ff69b4); }
+            100% { filter: drop-shadow(0 0 15px #ff69b4); }
+        }
+
+        .instructions {
+            font-size: 1.2em;
+            margin-bottom: 30px;
+            color: #ffc0cb;
+        }
+
+        .message-display {
+            font-size: 2em;
+            margin-bottom: 20px;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .message-letter {
+            background: linear-gradient(45deg, #ff69b4, #ffc0cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+            animation: letterGlow 1s ease-in-out;
+            text-shadow: 0 0 10px #ff69b4;
+        }
+
+        @keyframes letterGlow {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            margin: 30px auto;
+            max-width: 400px;
+        }
+
+        .card {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 2px solid #ff69b4;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            perspective: 1000px;
+        }
+
+        .card:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.3);
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+        }
+
+        .card-front {
+            background: linear-gradient(135deg, #ff69b4, #ff1493);
+            color: white;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        .card-back {
+            background: #000;
+            transform: rotateY(180deg);
+            font-size: 2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff69b4, #ffc0cb);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glitter 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glitter {
+            0% { filter: drop-shadow(0 0 3px #ff69b4); }
+            100% { filter: drop-shadow(0 0 8px #ff69b4); }
+        }
+
+        .card.correct-flash {
+            animation: correctFlash 0.8s ease-in-out;
+        }
+
+        @keyframes correctFlash {
+            0%, 100% { background: linear-gradient(135deg, #2a2a2a, #1a1a1a); }
+            50% { background: linear-gradient(135deg, #00ff00, #90EE90); }
+        }
+
+        .card.wrong-shake {
+            animation: wrongShake 0.1s ease-in-out;
+        }
+
+        @keyframes wrongShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        .final-message {
+            display: none;
+            font-size: 4em;
+            font-weight: bold;
+            text-align: center;
+            margin: 30px 0;
+            background: linear-gradient(45deg, #ff69b4, #ffc0cb, #ff1493, #ffb6c1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: finalFlash 1s ease-in-out infinite alternate;
+        }
+
+        @keyframes finalFlash {
+            0% { 
+                transform: scale(1);
+                filter: drop-shadow(0 0 10px #ff69b4);
+            }
+            100% { 
+                transform: scale(1.1);
+                filter: drop-shadow(0 0 25px #ff69b4);
+            }
+        }
+
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #ff69b4, #ff1493);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-size: 1.1em;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 105, 180, 0.4);
+        }
+
+        .celebration-controls {
+            display: none;
+            margin-top: 20px;
+        }
+
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            min-width: 200px;
+            box-shadow: 0px 8px 16px rgba(255, 105, 180, 0.3);
+            z-index: 1000;
+            border-radius: 10px;
+            border: 2px solid #ff69b4;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: dropdownSlide 0.3s ease-out;
+        }
+
+        @keyframes dropdownSlide {
+            0% { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+            100% { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
+
+        .dropdown-content.show {
+            display: block;
+        }
+
+        .dropdown-item {
+            color: #ffc0cb;
+            padding: 15px 20px;
+            text-decoration: none;
+            display: block;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-bottom: 1px solid #ff69b444;
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .dropdown-item:hover {
+            background: linear-gradient(45deg, #ff69b444, #ff149344);
+            color: white;
+        }
+
+        .progress {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #ffc0cb;
+        }
+
+        /* Image burst animation */
+        .burst-image {
+            position: fixed;
+            width: 100px;
+            height: 100px;
+            border-radius: 0px;
+            cursor: pointer;
+            z-index: 500;
+            transition: all 0.3s ease;
+            //box-shadow: 0 0 20px rgba(255, 105, 180, 0.5);
+            //border: 2px solid #ff69b4;
+        }
+
+        .burst-image.clicked {
+            position: fixed !important;
+            top: 50% !important;
+            left: 50% !important;
+            transform: translate(-50%, -50%) scale(2) !important;
+            width: 200px !important;
+            height: 200px !important;
+            z-index: 1000 !important;
+            animation: none !important;
+            //box-shadow: 0 0 50px rgba(255, 105, 180, 0.8);
+        }
+
+        .image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 50%;
+            height: 50%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 999;
+            display: none;
+            cursor: pointer;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 500px) {
+            .card {
+                width: 60px;
+                height: 60px;
+                font-size: 0.9em;
+            }
+            
+            .title {
+                font-size: 2em;
+            }
+            
+            .final-message {
+                font-size: 2.5em;
+                margin-top: 30px;
+            }
+            
+            .cards-grid {
+                max-width: 300px;
+                gap: 10px;
+            }
+
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn {
+                width: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="title">?? Birthday Memory Game ??</h1>
+        <p class="instructions">Click the cards in the right order to reveal the special message!</p>
+        
+        <div class="message-display" id="messageDisplay"></div>
+        
+        <div class="cards-grid" id="cardsGrid"></div>
+        
+        <div class="progress" id="progress">Letters found: 0 / 15</div>
+        
+        <div class="controls">
+            <button class="btn" onclick="resetGame()">Start Over</button>
+        </div>
+        
+        <div class="final-message" id="finalMessage">
+            ?? HAPPY BIRTHDAY RIM! ??
+        </div>
+
+        <div class="celebration-controls" id="celebrationControls">
+            <div class="controls">
+                <!-- Play Song Dropdown -->
+                <div class="dropdown">
+                    <button class="btn" onclick="toggleDropdown('songDropdown')">?? Play Song</button>
+                    <div id="songDropdown" class="dropdown-content">
+                        <div class="dropdown-item" onclick="playSong('song1.mp3')">Happy Birthday Song 1</div>
+                        <div class="dropdown-item" onclick="playSong('song2.mp3')">Happy Birthday Song 2</div>
+                        <div class="dropdown-item" onclick="playSong('song3.mp3')">Happy Birthday Song 3</div>
+                        <!-- Add more songs here as needed -->
+                    </div>
+                </div>
+
+                <!-- Play Video Dropdown -->
+                <div class="dropdown">
+                    <button class="btn" onclick="toggleDropdown('videoDropdown')">?? Play Video</button>
+                    <div id="videoDropdown" class="dropdown-content">
+                        <div class="dropdown-item" onclick="playVideo('video1.mp4')">Congratulations Video 1</div>
+                        <div class="dropdown-item" onclick="playVideo('video2.mp4')">Congratulations Video 2</div>
+                        <div class="dropdown-item" onclick="playVideo('video3.mp4')">Congratulations Video 3</div>
+                        <!-- Add more videos here as needed -->
+                    </div>
+                </div>
+
+                <!-- Celebrate Button -->
+                <button class="btn" onclick="startImageBurst()">? Celebrate!</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Image overlay for clicked images -->
+    <div class="image-overlay" id="imageOverlay" onclick="closeImagePreview()"></div>
+
+    <!-- Audio elements for sound effects -->
+    <audio id="correctSound" preload="auto">
+        <!-- Magical wand sound - you can replace this with a better magical sound -->
+        <source src="data:audio/wav;base64,UklGRpQEAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACAAgAZGF0YXAEAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmASBDuL0O/HfCoGKHzK8N2QQAoSXLDn5qZTFgxMquXzu2MaA0Kl4OSwdhoQC4vc8NdyEwMzit7ym2EVCCeU2+/RdSEEMXS28d+QSgkXdLLp6K5RFgpHoOTzwGERBD2M0+7NdSACLnrJ8N6LTg8XdLTm6adRFgpFnuLywmQSBTmN1e/MeSoEJ3vG8duNOggWdLnr6aNaGRJDh+XxsVMdBT2H0+7VfC" type="audio/wav">
+    </audio>
+    
+    <audio id="wrongSound" preload="auto">
+        <!-- Sad buzzer sound -->
+        <source src="data:audio/wav;base64,UklGRjIEAABXQVZFZm10IBAAAAABAAEAIlYAAESsAAACAAgAZGF0YQ4EAAC2tbC2tK+0AgEBAAhYAQCbVQAAAAhYAQCwJE7VdLqzjLy8u7e6u7y8xrRkr9M2nLC5trm5ubu5ubu7nrxjpqmttbS2urm5ubo=" type="audio/wav">
+    </audio>
+    
+    <!-- Audio element for songs -->
+    <audio id="songPlayer" preload="none"></audio>
+    
+    <!-- Video element for videos -->
+    <video id="videoPlayer" style="display: none;" controls></video>
+
+    <script>
+        // Game state
+        const TARGET_MESSAGE = "HAPPYBIRTHDAYRIM";
+        let currentPosition = 0;
+        let gameComplete = false;
+        let cards = [];
+        let burstImages = [];
+        let currentSong = null;
+
+        // Image files array - add your image filenames here
+        const celebrationImages = [
+            '1.png',
+            '2.png', 
+            '3.png',
+            '4.png',
+            '5.png',
+            '6.png', 
+'7.png',
+'8.png',
+            '9.png', 
+            '10.png',
+            '4.jpg',
+            
+
+            // Add more image filenames as needed 
+            // etc...
+        ];
+
+        // Game setup
+        function initGame() {
+            gameComplete = false;
+            currentPosition = 0;
+            document.getElementById('messageDisplay').innerHTML = '';
+            document.getElementById('progress').textContent = `Letters found: 0 / ${TARGET_MESSAGE.length}`;
+            document.getElementById('finalMessage').style.display = 'none';
+            document.getElementById('celebrationControls').style.display = 'none';
+            document.getElementById('cardsGrid').style.display = 'grid';
+            
+            // Clear any existing burst images
+            clearBurstImages();
+            
+            createCards();
+        }
+
+        function createCards() {
+            const grid = document.getElementById('cardsGrid');
+            grid.innerHTML = '';
+            cards = [];
+
+            // Create array of letters and shuffle them
+            const letters = TARGET_MESSAGE.split('');
+            const shuffledLetters = shuffleArray([...letters]);
+
+            // Create cards
+            for (let i = 0; i < 16; i++) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <div class="card-inner">
+                        <div class="card-front">?</div>
+                        <div class="card-back">${i < shuffledLetters.length ? shuffledLetters[i] : '?'}</div>
+                    </div>
+                `;
+                
+                const cardData = {
+                    element: card,
+                    letter: i < shuffledLetters.length ? shuffledLetters[i] : '?',
+                    isRevealed: false
+                };
+                
+                card.addEventListener('click', () => handleCardClick(cardData));
+                cards.push(cardData);
+                grid.appendChild(card);
+            }
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function handleCardClick(cardData) {
+            if (gameComplete || cardData.isRevealed) return;
+
+            const expectedLetter = TARGET_MESSAGE[currentPosition];
+            
+            // Flip the card
+            cardData.element.classList.add('flipped');
+
+            setTimeout(() => {
+                if (cardData.letter === expectedLetter) {
+                    // Correct letter
+                    handleCorrectCard(cardData);
+                } else {
+                    // Wrong letter
+                    handleWrongCard(cardData);
+                }
+            }, 300);
+        }
+
+        function handleCorrectCard(cardData) {
+            // Play correct sound
+            try {
+                document.getElementById('correctSound').currentTime = 0;
+                document.getElementById('correctSound').play();
+            } catch (e) {
+                console.log('Could not play correct sound');
+            }
+            
+            // Flash effect
+            cardData.element.classList.add('correct-flash');
+            
+            // Mark as revealed
+            cardData.isRevealed = true;
+            
+            setTimeout(() => {
+                // Add letter to message display
+                addLetterToMessage(cardData.letter);
+                
+                // Remove card from grid
+                cardData.element.style.opacity = '0';
+                cardData.element.style.transform = 'scale(0)';
+                
+                currentPosition++;
+                updateProgress();
+                
+                // Check if word is complete for auto-spacing
+                if (currentPosition === 5) { // After "HAPPY"
+                    addSpaceToMessage();
+                } else if (currentPosition === 13) { // After "BIRTHDAY"
+                    addSpaceToMessage();
+                }
+                
+                // Check if game is complete
+                if (currentPosition === TARGET_MESSAGE.length) {
+                    setTimeout(() => {
+                        completeGame();
+                    }, 500);
+                }
+                
+                cardData.element.classList.remove('correct-flash');
+            }, 800);
+        }
+
+        function handleWrongCard(cardData) {
+            // Play wrong sound
+            try {
+                document.getElementById('wrongSound').currentTime = 0;
+                document.getElementById('wrongSound').play();
+            } catch (e) {
+                console.log('Could not play wrong sound');
+            }
+            
+            // Shake effect
+            cardData.element.classList.add('wrong-shake');
+            
+            setTimeout(() => {
+                // Flip card back
+                cardData.element.classList.remove('flipped');
+                cardData.element.classList.remove('wrong-shake');
+            }, 100);
+        }
+
+        function addLetterToMessage(letter) {
+            const messageDisplay = document.getElementById('messageDisplay');
+            const letterSpan = document.createElement('span');
+            letterSpan.className = 'message-letter';
+            letterSpan.textContent = letter;
+            messageDisplay.appendChild(letterSpan);
+        }
+
+        function addSpaceToMessage() {
+            const messageDisplay = document.getElementById('messageDisplay');
+            const spaceSpan = document.createElement('span');
+            spaceSpan.innerHTML = '&nbsp;';
+            messageDisplay.appendChild(spaceSpan);
+        }
+
+        function updateProgress() {
+            document.getElementById('progress').textContent = 
+                `Letters found: ${currentPosition} / ${TARGET_MESSAGE.length}`;
+        }
+
+        function completeGame() {
+            gameComplete = true;
+            document.getElementById('cardsGrid').style.display = 'none';
+            document.getElementById('finalMessage').style.display = 'block';
+            document.getElementById('celebrationControls').style.display = 'block';
+            
+            // Create celebration effect
+            createCelebrationEffect();
+        }
+
+        function createCelebrationEffect() {
+            // Add extra sparkles and animations
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const sparkle = document.createElement('div');
+                    sparkle.innerHTML = '?';
+                    sparkle.style.position = 'fixed';
+                    sparkle.style.left = Math.random() * window.innerWidth + 'px';
+                    sparkle.style.top = Math.random() * window.innerHeight + 'px';
+                    sparkle.style.fontSize = Math.random() * 20 + 20 + 'px';
+                    sparkle.style.pointerEvents = 'none';
+                    sparkle.style.animation = 'sparkle 2s ease-out forwards';
+                    sparkle.style.zIndex = '1000';
+                    
+                    document.body.appendChild(sparkle);
+                    
+                    setTimeout(() => {
+                        sparkle.remove();
+                    }, 2000);
+                }, i * 100);
+            }
+        }
+
+        // Dropdown functionality
+        function toggleDropdown(dropdownId) {
+            // Close all other dropdowns
+            const dropdowns = document.querySelectorAll('.dropdown-content');
+            dropdowns.forEach(dropdown => {
+                if (dropdown.id !== dropdownId) {
+                    dropdown.classList.remove('show');
+                }
+            });
+            
+            // Toggle the clicked dropdown
+            const dropdown = document.getElementById(dropdownId);
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            if (!event.target.matches('.btn')) {
+                const dropdowns = document.querySelectorAll('.dropdown-content');
+                dropdowns.forEach(dropdown => {
+                    dropdown.classList.remove('show');
+                });
+            }
+        });
+
+        // Song functionality
+        function playSong(songFile) {
+            const songPlayer = document.getElementById('songPlayer');
+            
+            // Stop current song if playing
+            if (currentSong) {
+                currentSong.pause();
+                currentSong.currentTime = 0;
+            }
+            
+            songPlayer.src = songFile;
+            songPlayer.play().then(() => {
+                currentSong = songPlayer;
+                console.log('Playing song: ' + songFile);
+            }).catch(error => {
+                console.log('Could not play song: ' + songFile);
+                alert('Song file not found. Please upload ' + songFile + ' to your repository.');
+            });
+            
+            // Close dropdown
+            document.getElementById('songDropdown').classList.remove('show');
+        }
+
+        // Video functionality
+        function playVideo(videoFile) {
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.src = videoFile;
+            videoPlayer.style.display = 'block';
+            videoPlayer.style.position = 'fixed';
+            videoPlayer.style.top = '50%';
+            videoPlayer.style.left = '50%';
+            videoPlayer.style.transform = 'translate(-50%, -50%)';
+            videoPlayer.style.zIndex = '1000';
+            videoPlayer.style.maxWidth = '90%';
+            videoPlayer.style.maxHeight = '90%';
+            videoPlayer.style.borderRadius = '10px';
+            videoPlayer.style.boxShadow = '0 0 50px rgba(255, 105, 180, 0.8)';
+            
+            videoPlayer.play().catch(error => {
+                console.log('Could not play video: ' + videoFile);
+                alert('Video file not found. Please upload ' + videoFile + ' to your repository.');
+                videoPlayer.style.display = 'none';
+            });
+            
+            // Close dropdown
+            document.getElementById('videoDropdown').classList.remove('show');
+            
+            // Hide video when it ends
+            videoPlayer.addEventListener('ended', function() {
+                videoPlayer.style.display = 'none';
+            });
+        }
+
+        // Image burst functionality
+        function startImageBurst() {
+            clearBurstImages();
+            
+            celebrationImages.forEach((imageFile, index) => {
+                setTimeout(() => {
+                    createBurstImage(imageFile);
+                }, index * 200); // Stagger the image appearances
+            });
+        }
+
+        function createBurstImage(imageFile) {
+            const img = document.createElement('img');
+            img.src = imageFile;
+            img.className = 'burst-image';
+            
+            // Start from center
+            const centerX = window.innerWidth / 2;
+            const centerY = window.innerHeight / 2;
+            
+            img.style.left = centerX + 'px';
+            img.style.top = centerY + 'px';
+            
+            // Random direction and speed
+            const angle = Math.random() * 2 * Math.PI;
+            const speed = Math.random() * 3 + 2;
+            const finalX = centerX + Math.cos(angle) * (window.innerWidth * 0.8);
+            const finalY = centerY + Math.sin(angle) * (window.innerHeight * 0.8);
+            
+            // Add click handler
+            img.addEventListener('click', function(e) {
+                e.stopPropagation();
+                showImagePreview(img);
+            });
+            
+            // Handle image load error
+            img.addEventListener('error', function() {
+                console.log('Could not load image: ' + imageFile);
+                img.remove();
+            });
+            
+            document.body.appendChild(img);
+            burstImages.push(img);
+            
+            // Animate the image
+            setTimeout(() => {
+                img.style.transition = 'all 3s ease-out';
+                img.style.left = finalX + 'px';
+                img.style.top = finalY + 'px';
+                img.style.width = '100px';
+                img.style.height = '100px';
+                img.style.opacity = '0.8';
+                
+                // Remove image after animation
+                setTimeout(() => {
+                    if (img.parentNode && !img.classList.contains('clicked')) {
+                        img.remove();
+                    }
+                }, 3000);
+            }, 100);
+        }
+
+        function showImagePreview(img) {
+            // Show overlay
+            document.getElementById('imageOverlay').style.display = 'block';
+            
+            // Move image to center and enlarge
+            img.classList.add('clicked');
+        }
+
+        function closeImagePreview() {
+            // Hide overlay
+            document.getElementById('imageOverlay').style.display = 'none';
+            
+            // Remove all clicked images
+            const clickedImages = document.querySelectorAll('.burst-image.clicked');
+            clickedImages.forEach(img => img.remove());
+        }
+
+        function clearBurstImages() {
+            burstImages.forEach(img => {
+                if (img.parentNode) {
+                    img.remove();
+                }
+            });
+            burstImages = [];
+            closeImagePreview();
+        }
+
+        function resetGame() {
+            // Stop any playing audio/video
+            if (currentSong) {
+                currentSong.pause();
+                currentSong.currentTime = 0;
+            }
+            
+            const videoPlayer = document.getElementById('videoPlayer');
+            videoPlayer.pause();
+            videoPlayer.style.display = 'none';
+            
+            initGame();
+        }
+
+        // Initialize the game when page loads
+         window.onload = initGame;
+    </script>
+</body>
+</html>
